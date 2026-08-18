@@ -81,6 +81,16 @@ export default function HomeScreen({ navigation }: Props) {
         />
       </View>
 
+      {/* Admin access */}
+      <TouchableOpacity
+        style={styles.adminBtn}
+        onPress={() => navigation.navigate('AdminDashboard')}
+        accessibilityRole="button"
+        accessibilityLabel="Admin Dashboard"
+      >
+        <Text style={styles.adminBtnText}>⚙ Admin Dashboard</Text>
+      </TouchableOpacity>
+
       {/* Gold bottom bar */}
       <View style={styles.bottomBar} />
     </View>
@@ -198,5 +208,19 @@ const styles = StyleSheet.create({
   bottomBar: {
     height: 4,
     backgroundColor: Colors.gold,
+  },
+  adminBtn: {
+    marginHorizontal: Spacing.lg,
+    marginBottom: Spacing.md,
+    paddingVertical: Spacing.sm,
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: Colors.lightGray,
+  },
+  adminBtnText: {
+    color: Colors.mediumGray,
+    fontSize: Fonts.sizes.sm,
+    fontWeight: '600',
+    letterSpacing: 0.5,
   },
 });

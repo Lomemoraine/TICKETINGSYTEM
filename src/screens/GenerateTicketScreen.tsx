@@ -15,6 +15,7 @@ import QRCode from 'react-native-qrcode-svg';
 import { RootStackParamList } from '../navigation/types';
 import BTRLogo from '../components/BTRLogo';
 import { generateTicket, Ticket } from '../storage/ticketStore';
+
 import { Colors, Fonts, Spacing, Radius, Shadow } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'GenerateTicket'>;
@@ -55,7 +56,7 @@ export default function GenerateTicketScreen({ navigation }: Props) {
     if (!ticket) return;
     try {
       await Share.share({
-        message: `My BTR Tuesday Service Ticket\nTicket #${ticket.id}\nEvent: ${ticket.eventName}\nLocation: ${ticket.eventLocation}\nSee you there!`,
+        message: `My BTR Tuesday Service Ticket\nToken #${ticket.tokenNumber}\nTicket No: ${ticket.ticketNumber}\nEvent: ${ticket.eventName}\nLocation: ${ticket.eventLocation}\nSee you there!`,
         title: 'BTR Ticket',
       });
     } catch {
@@ -66,7 +67,8 @@ export default function GenerateTicketScreen({ navigation }: Props) {
   /** QR value encodes the ticket data as a JSON string */
   const qrValue = ticket
     ? JSON.stringify({
-        ticketId: ticket.id,
+        ticketNumber: ticket.ticketNumber,
+        tokenNumber: ticket.tokenNumber,
         event: ticket.eventName,
         date: ticket.eventDate,
         location: ticket.eventLocation,
@@ -97,12 +99,25 @@ export default function GenerateTicketScreen({ navigation }: Props) {
       >
         {/* Ticket card */}
         <View style={styles.ticketCard}>
-          {/* Ticket top: number */}
+          {/* Ticket top: numbers */}
           <View style={styles.ticketHeader}>
-            <Text style={styles.ticketLabel}>Ticket Number:</Text>
-            <Text style={styles.ticketNumber}>
-              {ticket ? ticket.id : '---'}
-            </Text>
+            {/* Token number */}
+            <View style={styles.numberBlock}>
+              <Text style={styles.numberLabel}>TOKEN</Text>
+              <Text style={styles.tokenNumber}>
+                {ticket ? `#${ticket.tokenNumber}` : '---'}
+              </Text>
+            </View>
+
+            <View style={styles.numberDivider} />
+
+            {/* 9-digit ticket number */}
+            <View style={styles.numberBlock}>
+              <Text style={styles.numberLabel}>TICKET NO.</Text>
+              <Text style={styles.ticketNumber}>
+                {ticket ? ticket.ticketNumber : '---------'}
+              </Text>
+            </View>
           </View>
 
           <View style={styles.goldDivider} />
@@ -251,21 +266,42 @@ const styles = StyleSheet.create({
   },
   ticketHeader: {
     flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: Spacing.sm,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
     marginBottom: Spacing.md,
+    paddingHorizontal: Spacing.sm,
   },
-  ticketLabel: {
-    fontSize: Fonts.sizes.md,
-    color: Colors.darkGray,
-    fontWeight: '500',
+  numberBlock: {
+    flex: 1,
+    alignItems: 'center',
   },
-  ticketNumber: {
+  numberDivider: {
+    width: 1,
+    height: 40,
+    backgroundColor: Colors.lightGray,
+    marginHorizontal: Spacing.sm,
+  },
+  numberLabel: {
+    fontSize: Fonts.sizes.xs,
+    color: Colors.mediumGray,
+    letterSpacing: 2,
+    textTransform: 'uppercase',
+    marginBottom: 4,
+  },
+  tokenNumber: {
     fontSize: Fonts.sizes.xxl,
     color: Colors.deepBlue,
     fontWeight: '800',
     fontFamily: Fonts.heading,
     letterSpacing: 2,
+  },
+  ticketNumber: {
+    fontSize: Fonts.sizes.lg,
+    color: Colors.gold,
+    fontWeight: '800',
+    fontFamily: Fonts.heading,
+    letterSpacing: 1.5,
   },
   goldDivider: {
     width: '80%',

@@ -8,6 +8,7 @@ import HomeScreen from '../screens/HomeScreen';
 import GenerateTicketScreen from '../screens/GenerateTicketScreen';
 import MyTicketsScreen from '../screens/MyTicketsScreen';
 import AboutMinistryScreen from '../screens/AboutMinistryScreen';
+import AdminDashboardScreen from '../screens/AdminDashboardScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -27,6 +28,7 @@ export default function AppNavigator() {
         <Stack.Screen name="GenerateTicket" component={GenerateTicketScreen} />
         <Stack.Screen name="MyTickets" component={MyTicketsScreen} />
         <Stack.Screen name="AboutMinistry" component={AboutMinistryScreen} />
+        <Stack.Screen name="AdminDashboard" component={AdminDashboardScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

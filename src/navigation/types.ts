@@ -4,4 +4,5 @@ export type RootStackParamList = {
   GenerateTicket: undefined;
   MyTickets: undefined;
   AboutMinistry: undefined;
+  AdminDashboard: undefined;
 };

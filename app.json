@@ -23,14 +23,6 @@
     "web": {
       "favicon": "./assets/icon.png",
       "bundler": "metro"
-    },
-    "plugins": [
-      [
-        "@react-native-async-storage/async-storage",
-        {
-          "exclude": []
-        }
-      ]
-    ]
+    }
   }
 }

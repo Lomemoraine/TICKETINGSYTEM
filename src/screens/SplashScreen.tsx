@@ -6,6 +6,7 @@ import {
   Animated,
   StatusBar,
   Dimensions,
+  Platform,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
@@ -20,37 +21,65 @@ export default function SplashScreen({ navigation }: Props) {
   const logoScale = useRef(new Animated.Value(0.4)).current;
   const logoOpacity = useRef(new Animated.Value(0)).current;
   const textOpacity = useRef(new Animated.Value(0)).current;
-  const lineWidth = useRef(new Animated.Value(0)).current;
+  // useNativeDriver: false is not supported on web, so on web we skip the
+  // width animation and just show the divider at full width immediately.
+  const lineWidth = useRef(
+    new Animated.Value(Platform.OS === 'web' ? width * 0.55 : 0),
+  ).current;
 
   useEffect(() => {
-    // Animate logo in
-    Animated.sequence([
-      Animated.parallel([
-        Animated.spring(logoScale, {
+    if (Platform.OS === 'web') {
+      // On web: animate only properties that support useNativeDriver: true
+      Animated.sequence([
+        Animated.parallel([
+          Animated.spring(logoScale, {
+            toValue: 1,
+            tension: 60,
+            friction: 7,
+            useNativeDriver: true,
+          }),
+          Animated.timing(logoOpacity, {
+            toValue: 1,
+            duration: 700,
+            useNativeDriver: true,
+          }),
+        ]),
+        Animated.timing(textOpacity, {
           toValue: 1,
-          tension: 60,
-          friction: 7,
+          duration: 600,
           useNativeDriver: true,
         }),
-        Animated.timing(logoOpacity, {
+      ]).start();
+    } else {
+      // On native: full sequence including the width animation
+      Animated.sequence([
+        Animated.parallel([
+          Animated.spring(logoScale, {
+            toValue: 1,
+            tension: 60,
+            friction: 7,
+            useNativeDriver: true,
+          }),
+          Animated.timing(logoOpacity, {
+            toValue: 1,
+            duration: 700,
+            useNativeDriver: true,
+          }),
+        ]),
+        // Gold divider line grows
+        Animated.timing(lineWidth, {
+          toValue: width * 0.55,
+          duration: 500,
+          useNativeDriver: false,
+        }),
+        // Text fades in
+        Animated.timing(textOpacity, {
           toValue: 1,
-          duration: 700,
+          duration: 600,
           useNativeDriver: true,
         }),
-      ]),
-      // Gold divider line grows
-      Animated.timing(lineWidth, {
-        toValue: width * 0.55,
-        duration: 500,
-        useNativeDriver: false,
-      }),
-      // Text fades in
-      Animated.timing(textOpacity, {
-        toValue: 1,
-        duration: 600,
-        useNativeDriver: true,
-      }),
-    ]).start();
+      ]).start();
+    }
 
     // Navigate to Home after 3 seconds
     const timer = setTimeout(() => {

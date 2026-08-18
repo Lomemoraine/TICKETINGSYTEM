@@ -34,7 +34,7 @@ export default function MyTicketsScreen({ navigation }: Props) {
   const handleShare = async (t: Ticket) => {
     try {
       await Share.share({
-        message: `BTR Ticket #${t.id}\nEvent: ${t.eventName}\nLocation: ${t.eventLocation}`,
+        message: `BTR Ticket\nToken #${t.tokenNumber}\nTicket No: ${t.ticketNumber}\nEvent: ${t.eventName}\nLocation: ${t.eventLocation}`,
         title: 'BTR Ticket',
       });
     } catch {
@@ -44,7 +44,8 @@ export default function MyTicketsScreen({ navigation }: Props) {
 
   const qrValue = (t: Ticket) =>
     JSON.stringify({
-      ticketId: t.id,
+      ticketNumber: t.ticketNumber,
+      tokenNumber: t.tokenNumber,
       event: t.eventName,
       date: t.eventDate,
       location: t.eventLocation,
@@ -54,7 +55,8 @@ export default function MyTicketsScreen({ navigation }: Props) {
   const renderTicket = ({ item }: { item: Ticket }) => (
     <View style={styles.ticketRow}>
       <View style={styles.ticketInfo}>
-        <Text style={styles.ticketNum}>Ticket #{item.id}</Text>
+        <Text style={styles.ticketNum}>Token #{item.tokenNumber}</Text>
+        <Text style={styles.ticketNumSmall}>{item.ticketNumber}</Text>
         <Text style={styles.ticketDate}>{item.eventDate}</Text>
       </View>
 
@@ -73,7 +75,7 @@ export default function MyTicketsScreen({ navigation }: Props) {
         style={styles.detailBtn}
         onPress={() => setSelected(item)}
         accessibilityRole="button"
-        accessibilityLabel={`View details for ticket ${item.id}`}
+        accessibilityLabel={`View details for ticket ${item.tokenNumber}`}
       >
         <Text style={styles.detailBtnText}>View</Text>
       </TouchableOpacity>
@@ -112,7 +114,7 @@ export default function MyTicketsScreen({ navigation }: Props) {
       ) : (
         <FlatList
           data={tickets}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.tokenNumber}
           renderItem={renderTicket}
           contentContainerStyle={styles.list}
           showsVerticalScrollIndicator={false}
@@ -144,7 +146,14 @@ export default function MyTicketsScreen({ navigation }: Props) {
           <View style={styles.modalCard}>
             {/* Modal header */}
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Ticket #{selected?.id}</Text>
+              <View>
+                <Text style={styles.modalTokenLabel}>TOKEN</Text>
+                <Text style={styles.modalTitle}>#{selected?.tokenNumber}</Text>
+              </View>
+              <View style={styles.modalTicketNumBox}>
+                <Text style={styles.modalTicketNumLabel}>TICKET NO.</Text>
+                <Text style={styles.modalTicketNum}>{selected?.ticketNumber}</Text>
+              </View>
               <Pressable
                 onPress={() => setSelected(null)}
                 style={styles.closeBtn}
@@ -245,6 +254,13 @@ const styles = StyleSheet.create({
     color: Colors.deepBlue,
     fontWeight: '700',
   },
+  ticketNumSmall: {
+    fontSize: Fonts.sizes.sm,
+    color: Colors.gold,
+    fontWeight: '700',
+    letterSpacing: 1,
+    marginTop: 1,
+  },
   ticketDate: {
     fontSize: Fonts.sizes.sm,
     color: Colors.mediumGray,
@@ -336,10 +352,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: Spacing.sm,
   },
+  modalTokenLabel: {
+    fontSize: Fonts.sizes.xs,
+    color: Colors.mediumGray,
+    letterSpacing: 2,
+    textTransform: 'uppercase',
+  },
   modalTitle: {
-    fontSize: Fonts.sizes.xl,
+    fontSize: Fonts.sizes.xxl,
     fontWeight: '800',
     color: Colors.deepBlue,
+  },
+  modalTicketNumBox: {
+    alignItems: 'center',
+  },
+  modalTicketNumLabel: {
+    fontSize: Fonts.sizes.xs,
+    color: Colors.mediumGray,
+    letterSpacing: 2,
+    textTransform: 'uppercase',
+  },
+  modalTicketNum: {
+    fontSize: Fonts.sizes.lg,
+    fontWeight: '800',
+    color: Colors.gold,
+    letterSpacing: 1.5,
   },
   closeBtn: {
     padding: Spacing.sm,
