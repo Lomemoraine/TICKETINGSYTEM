@@ -1,4 +1,4 @@
-# BTR Ticketing App
+<!-- # BTR Ticketing App
 **Back to the Root of Worship — Dr. Sarah K Tuesday Worship Ministries**
 
 A mobile ticketing system for the Tuesday Service, built with Expo + React Native.
@@ -67,4 +67,4 @@ btr-ticketing-app/
 ## Future Expansion (per spec)
 - USSD interface for non-smartphone users (dial `*123#`, receive ticket via SMS)
 - Admin QR scanner for ushers
-- Attendance analytics dashboard
+- Attendance analytics dashboard -->
